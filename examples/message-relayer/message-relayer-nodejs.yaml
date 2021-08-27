@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: message-relayer-nodejs
+  name: message-relayer-nodejs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: message-relayer-nodejs
+  strategy:
+    rollingUpdate:
+  template:
+    metadata:
+      labels:
+        run: message-relayer-nodejs
+    spec:
+      hostname: message-relayer-nodejs
+      containers:
+      - name: message-relayer-nodejs
+        tty: true
+        image: message-relayer-nodejs
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: RABBITMQ_URL
+          value: amqp://guest:guest@rabbitmq:5672/%2F
+        - name: QUEUE_FROM
+          value: test_a
+        - name: QUEUE_TO
+          value: test_b
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: message-relayer-nodejs
+  name: message-relayer-nodejs
+spec:
+  selector:
+    run: message-relayer-nodejs
+  type: ClusterIP
+  ports:
+  - port: 12345
+    targetPort: 12345
+    protocol: TCP
+---

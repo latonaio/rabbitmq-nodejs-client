@@ -1,0 +1,14 @@
+{
+  "name": "message-relayer-nodejs",
+  "version": "1.0.0",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^16.7.2",
+    "rabbitmq-client": "git+https://github.com/latonaio/rabbitmq-nodejs-client.git#main",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.2"
+  },
+  "scripts": {
+    "start": "ts-node src/main.ts"
+  }
+}
