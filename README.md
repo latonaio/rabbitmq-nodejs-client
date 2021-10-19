@@ -1,8 +1,5 @@
 # rabbitmq-nodejs-client
-
-## 概要
-
-RabbitMQ に接続し、メッセージを送受信するための Node.js 用クライアントライブラリです。
+rabbitmq-nodejs-client は、RabbitMQ に接続し、メッセージを送受信するための Node.js 用クライアントライブラリです。
 
 
 ## 動作環境
