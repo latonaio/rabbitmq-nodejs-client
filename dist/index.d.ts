@@ -17,8 +17,8 @@ export declare class RabbitmqClient extends EventEmitter {
     #private;
     private constructor();
     static create(url: string, receiveQueues?: Iterable<string> | null, sendQueues?: Iterable<string> | null, prefetchCount?: number): Promise<RabbitmqClient>;
-    startReceiving(): void;
-    stopReceiving(): void;
+    startReceiving(): Promise<void>;
+    stopReceiving(): Promise<void>;
     iterator(stopOnExit?: boolean): AsyncGenerator<RabbitmqMessage, void, unknown>;
     send(queueName: string, data: any): Promise<void>;
     close(): Promise<void>;

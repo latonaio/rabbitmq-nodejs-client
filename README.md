@@ -117,10 +117,10 @@ client.on('message', message => {
 });
 
 // 受信開始
-client.startReceiving();
+await client.startReceiving();
 
 // 受信を終了するときは
-// client.stopReceiving();
+// await client.stopReceiving();
 ```
 
 

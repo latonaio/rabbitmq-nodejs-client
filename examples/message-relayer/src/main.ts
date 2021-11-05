@@ -4,7 +4,7 @@ import { RabbitmqClient } from 'rabbitmq-client';
 async function main() {
   // 環境変数から情報を読み込む
   const url = process.env.RABBITMQ_URL;
-  const queueNameFrom = process.env.QUEUE_FROM;
+  const queueNameOrigin = process.env.QUEUE_ORIGIN;
   const queueNameTo = process.env.QUEUE_TO;
 
   console.log('started:');
@@ -12,7 +12,7 @@ async function main() {
   // 接続
   const client = await RabbitmqClient.create(
     url,
-    [queueNameFrom],
+    [queueNameOrigin],
     [queueNameTo]
   );
 

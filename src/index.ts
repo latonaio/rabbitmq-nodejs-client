@@ -98,7 +98,7 @@ export class RabbitmqClient extends EventEmitter {
     });
   }
 
-  startReceiving() {
+  async startReceiving() {
     if (this.#setupFunc) {
       return;
     }
@@ -110,6 +110,7 @@ export class RabbitmqClient extends EventEmitter {
             this.emit('message', new RabbitmqMessage(msgRaw!, this.#channelWrapper));
           } catch (e) {
             console.error('[RabbitmqClient] message parsing failed, ignoring!:', e);
+            this.#channelWrapper.nack(msgRaw!, false, false);
           }
         }, {
           consumerTag: queueName
@@ -117,15 +118,15 @@ export class RabbitmqClient extends EventEmitter {
       }
     };
 
-    this.#channelWrapper.addSetup(this.#setupFunc);
+    await this.#channelWrapper.addSetup(this.#setupFunc);
   }
 
-  stopReceiving() {
+  async stopReceiving() {
     if (!this.#setupFunc) {
       return;
     }
 
-    this.#channelWrapper.removeSetup(this.#setupFunc, async (channel: amqplib.ConfirmChannel) => {
+    await this.#channelWrapper.removeSetup(this.#setupFunc, async (channel: amqplib.ConfirmChannel) => {
       for (const queueName of this.#receiveQueues) {
         await channel.cancel(queueName);
       }
@@ -146,7 +147,7 @@ export class RabbitmqClient extends EventEmitter {
       }
     } finally {
       // break されたとき
-      stopOnExit && this.stopReceiving();
+      stopOnExit && await this.stopReceiving();
     }
   }
 
@@ -166,7 +167,7 @@ export class RabbitmqClient extends EventEmitter {
   }
 
   async close() {
-    this.stopReceiving();
+    await this.stopReceiving();
     await this.#channelWrapper.close();
   }
 }

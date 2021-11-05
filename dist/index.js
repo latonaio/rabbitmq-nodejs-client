@@ -81,7 +81,7 @@ class RabbitmqClient extends events_1.EventEmitter {
             const self = new RabbitmqClient(channelWrapper, receiveQueuesSet, sendQueuesSet);
         });
     }
-    startReceiving() {
+    async startReceiving() {
         if (this.#setupFunc) {
             return;
         }
@@ -93,19 +93,20 @@ class RabbitmqClient extends events_1.EventEmitter {
                     }
                     catch (e) {
                         console.error('[RabbitmqClient] message parsing failed, ignoring!:', e);
+                        this.#channelWrapper.nack(msgRaw, false, false);
                     }
                 }, {
                     consumerTag: queueName
                 });
             }
         };
-        this.#channelWrapper.addSetup(this.#setupFunc);
+        await this.#channelWrapper.addSetup(this.#setupFunc);
     }
-    stopReceiving() {
+    async stopReceiving() {
         if (!this.#setupFunc) {
             return;
         }
-        this.#channelWrapper.removeSetup(this.#setupFunc, async (channel) => {
+        await this.#channelWrapper.removeSetup(this.#setupFunc, async (channel) => {
             for (const queueName of this.#receiveQueues) {
                 await channel.cancel(queueName);
             }
@@ -118,13 +119,13 @@ class RabbitmqClient extends events_1.EventEmitter {
             this.startReceiving();
         });
         try {
-            for await (const [message] of events_1.on(this, 'message')) {
+            for await (const [message] of (0, events_1.on)(this, 'message')) {
                 yield message;
             }
         }
         finally {
             // break されたとき
-            stopOnExit && this.stopReceiving();
+            stopOnExit && await this.stopReceiving();
         }
     }
     async send(queueName, data) {
@@ -137,7 +138,7 @@ class RabbitmqClient extends events_1.EventEmitter {
         });
     }
     async close() {
-        this.stopReceiving();
+        await this.stopReceiving();
         await this.#channelWrapper.close();
     }
 }

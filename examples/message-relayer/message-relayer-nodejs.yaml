@@ -25,7 +25,7 @@ spec:
         env:
         - name: RABBITMQ_URL
           value: amqp://guest:guest@rabbitmq:5672/%2F
-        - name: QUEUE_FROM
+        - name: QUEUE_ORIGIN
           value: test_a
         - name: QUEUE_TO
           value: test_b
