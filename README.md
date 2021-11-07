@@ -1,10 +1,12 @@
 # rabbitmq-nodejs-client
-rabbitmq-nodejs-client は、RabbitMQ に接続し、メッセージを送受信するための Node.js 用クライアントライブラリです。
 
+rabbitmq-nodejs-client は、RabbitMQ に接続し、メッセージを送受信するためのシンプルな、Node.js ランタイム のための ライブラリです。  
 
 ## 動作環境
 
-* Node.js v12 以降
+* OS: Linux
+* CPU: ARM/AMD/Intel
+* Node.js Runtime v12 以降
 * TypeScript (オプション)
 
 
